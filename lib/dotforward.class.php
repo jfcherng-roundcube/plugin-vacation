@@ -74,19 +74,21 @@ class DotForward {
 
         } 
 
-	    return join(",",$arrDotForward);
+	    return join("\n",$arrDotForward);
         
     }
     
     public function parse($dotForward) {
 
+	$this->options['forward'] = '';
+
         // Clean up the .forward file for easier parsing
         $dotForward = str_replace(array("|", "\"", "\\"), "", $dotForward);
 
-		
+	// we convert all consecutive \r, \n, and commas into a single comma
+	$dotForward = preg_replace("/[\r\n,]+/", ",", $dotForward);
 
         $arr = explode(",", trim($dotForward));
-
         $first_element = array_shift($arr);
 
 		// @TODO: test to see if $first_element equals vacation binary
@@ -115,12 +117,11 @@ class DotForward {
                 $this->options['enabled'] = !empty($this->options['binary']);
             } else {
 
-                $this->options['forward'] = $next;
+                $this->options['forward'] .= "\n{$next}";
             }
         }
+	$this->options['forward'] = trim($this->options['forward']);
 
         return $this->options;
     }
 }
-
-?>
