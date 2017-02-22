@@ -8,7 +8,7 @@
 # setting in config.php in the parent directory
 #
 #BINDIR = /usr/local/sbin
-BINDIR = ..
+BINDIR = /usr/bin
 
 
 
