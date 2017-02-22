@@ -3,19 +3,21 @@
 /*
  * Setuid driver
  *
- * @package	plugins
- * @uses	rcube_plugin
- * @author	Jasper Slits <jaspersl at gmail dot com>
- * @version	1.9
+ * @package    plugins
+ * @uses    rcube_plugin
+ * @author    Jasper Slits <jaspersl at gmail dot com>
+ * @version    1.9
  * @license     GPL
- * @link	https://sourceforge.net/projects/rcubevacation/
- * @todo	See README.TXT
-*/
-class setuid extends VacationDriver {
+ * @link    https://sourceforge.net/projects/rcubevacation/
+ * @todo    See README.TXT
+ */
+class setuid extends VacationDriver
+{
 
     private $webserver_user = null;
-    
-    public function init() {
+
+    public function init()
+    {
 
         // The setuid executable needs to be executable
         $this->webserver_user = getenv('APACHE_RUN_USER');
@@ -26,8 +28,8 @@ class setuid extends VacationDriver {
         if (!is_executable($this->cfg['executable'])) {
 
             raise_error(array('code' => 601, 'type' => 'php', 'file' => __FILE__,
-                        'message' => sprintf("Vacation plugin: %s cannot be executed by user '%s'", $this->cfg['executable'], $this->webserver_user)
-                    ), true, true);
+                'message' => sprintf("Vacation plugin: %s cannot be executed by user '%s'", $this->cfg['executable'], $this->webserver_user),
+            ), true, true);
 
         } else {
             // Setuid ?
@@ -35,21 +37,22 @@ class setuid extends VacationDriver {
 
             if (!$fstat['mode'] & 0004000) {
                 raise_error(array(
-                            'code' => 601, 'type' => 'php', 'file' => __FILE__, 'message' => "Vacation plugin: {$this->cfg['executable']} has no setuid bit"
-                        ), true, true);
+                    'code' => 601, 'type' => 'php', 'file' => __FILE__, 'message' => "Vacation plugin: {$this->cfg['executable']} has no setuid bit",
+                ), true, true);
 
             }
         }
     }
 
 // Download .forward and .vacation.msg file
-    public function _get() {
-        $vacArr = array("subject"=>"", "body"=>"", "forward"=>"", "keepcopy"=>true, "enabled"=>false);
+    public function _get()
+    {
+        $vacArr = array("subject" => "", "body" => "", "forward" => "", "keepcopy" => true, "enabled" => false);
 
         if ($vacation_msg = $this->downloadfile($this->dotforward['message'])) {
             $dot_vacation_msg = explode("\n", $vacation_msg);
             $vacArr['subject'] = str_replace('Subject: ', '', $dot_vacation_msg[1]);
-            $vacArr['body'] = join("\n", array_slice($dot_vacation_msg, 2));
+            $vacArr['body'] = implode("\n", array_slice($dot_vacation_msg, 2));
         }
 
         if ($dotForwardFile = $this->downloadfile(".forward")) {
@@ -59,12 +62,15 @@ class setuid extends VacationDriver {
         }
 
         // Load aliases using the available identities
-        if (!$vacArr['enabled']) $vacArr['aliases'] = $this->vacation_aliases("method");
+        if (!$vacArr['enabled']) {
+            $vacArr['aliases'] = $this->vacation_aliases("method");
+        }
 
         return $vacArr;
     }
-    
-    protected function setVacation() {
+
+    protected function setVacation()
+    {
 
         // Remove existing vacation files
         $this->disable();
@@ -107,11 +113,12 @@ class setuid extends VacationDriver {
         }
         return true;
     }
-    
-    private function disable() {
+
+    private function disable()
+    {
         /*
-		 * Syntax:	squirrelmail_vacation_proxy  server user password action source destination
-        */
+         * Syntax:    squirrelmail_vacation_proxy  server user password action source destination
+         */
         $deleteFiles = array($this->dotforward['message'], ".forward", $this->dotforward['database']);
         if (isset($this->dotforward['always_keep_message']) && $this->dotforward['always_keep_message']) {
             unset($deleteFiles[0]);
@@ -122,9 +129,9 @@ class setuid extends VacationDriver {
 
         foreach ($deleteFiles as $file) {
             $command = sprintf('%s localhost %s "%s" delete %s %s',
-                    $this->cfg['executable'],
-                    Q($this->user->data['username']),
-                    $this->rcmail->decrypt($_SESSION['password']), $file, $dummy);
+                $this->cfg['executable'],
+                Q($this->user->data['username']),
+                $this->rcmail->decrypt($_SESSION['password']), $file, $dummy);
             exec($command);
         }
 
@@ -132,32 +139,33 @@ class setuid extends VacationDriver {
     }
 
     /*Removes the aliases
-	 *
-	 * @param string data
-	 * @param string remoteFile
-	 * @return boolean
-    */
-    private function uploadfile($data, $remoteFile) {
+     *
+     * @param string data
+     * @param string remoteFile
+     * @return boolean
+     */
+    private function uploadfile($data, $remoteFile)
+    {
         $result = 0;
         $localFile = tempnam(sys_get_temp_dir(), 'Vac');
         file_put_contents($localFile, trim($data));
         $command = sprintf('%s localhost %s "%s" put %s %s',
-                $this->cfg['executable'],
-                Q($this->user->data['username']),
-                $this->rcmail->decrypt($_SESSION['password']), $localFile, $remoteFile);
+            $this->cfg['executable'],
+            Q($this->user->data['username']),
+            $this->rcmail->decrypt($_SESSION['password']), $localFile, $remoteFile);
         exec($command, $resArr, $result);
         unlink($localFile);
         return $result;
     }
-    
-    private function downloadfile($remoteFile) {
+
+    private function downloadfile($remoteFile)
+    {
         $result = 0;
         $localFile = tempnam(sys_get_temp_dir(), 'Vac');
         $command = sprintf('%s localhost %s "%s"  get %s %s',
-                $this->cfg['executable'],
-                Q($this->user->data['username']),
-                $this->rcmail->decrypt($_SESSION['password']), $remoteFile, $localFile);
-
+            $this->cfg['executable'],
+            Q($this->user->data['username']),
+            $this->rcmail->decrypt($_SESSION['password']), $remoteFile, $localFile);
 
         exec($command, $resArr, $result);
 
@@ -167,8 +175,8 @@ class setuid extends VacationDriver {
 
             if (!empty($resArr) && ($resArr[0] == 'Invalid user') || ($resArr[0] == 'Invalid webuser')) {
                 raise_error(array(
-                            'code' => 601, 'type' => 'php', 'file' => __FILE__, 'message' => "Vacation plugin: {$this->cfg['executable']} is not configured for user \"{$this->webserver_user}\".<br/> Check config.mk in plugins/vacation/extra/vacation_binary."
-                        ), true, true);
+                    'code' => 601, 'type' => 'php', 'file' => __FILE__, 'message' => "Vacation plugin: {$this->cfg['executable']} is not configured for user \"{$this->webserver_user}\".<br/> Check config.mk in plugins/vacation/extra/vacation_binary.",
+                ), true, true);
             }
 
             $content = false;
@@ -177,5 +185,3 @@ class setuid extends VacationDriver {
         return $content;
     }
 }
-
-?>
