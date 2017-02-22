@@ -47,8 +47,13 @@ abstract class VacationDriver {
 	// Helper method for the template to determine if user is allowed to enter aliases
 	public final function useAliases()
 	{
-
 		return (isset($this->dotforward['alias_identities']) && $this->dotforward['alias_identities']);
+	}
+
+	// Vacation is enabled?
+	public final function useVacation()
+	{
+		return (isset($this->dotforward['binary']) && $this->dotforward['binary'] !== '');
 	}
 
 public function loadDefaults() {
