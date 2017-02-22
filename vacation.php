@@ -173,7 +173,6 @@ class vacation extends rcube_plugin {
 		// Information on the forward in a seperate fieldset.
 		if (! isset($this->inicfg['disable_forward']) || ( isset($this->inicfg['disable_forward']) && $this->inicfg['disable_forward']==false))
 		{
-                        $out .= '<p>' . $this->gettext('separate_forward') . '</p>';
 
 			// Forward mail to another account
 			$field_id = 'vacation_forward';
