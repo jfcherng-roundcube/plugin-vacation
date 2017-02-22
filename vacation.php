@@ -177,8 +177,8 @@ class vacation extends rcube_plugin {
 
 			// Forward mail to another account
 			$field_id = 'vacation_forward';
-			$input_autoresponderforward = new html_inputfield(array('name' => '_vacation_forward', 'id' => $field_id, 'size' => 90));
-			$out .= sprintf("<p><label for=\"%s\">%s</label>&nbsp;%s</p>\n",
+			$input_autoresponderforward = new html_textarea(array('name' => '_vacation_forward', 'id' => $field_id, 'cols' => 88, 'rows' => 8));
+			$out .= sprintf("<p><label for=\"%s\">%s</label><br/>%s</p>\n",
 					$field_id,
 					rep_specialchars_output($this->gettext('forwardingaddresses')),
 					$input_autoresponderforward->show($settings['forward']));
@@ -190,5 +190,3 @@ class vacation extends rcube_plugin {
         return $out;
     }
 }
-
-?>
