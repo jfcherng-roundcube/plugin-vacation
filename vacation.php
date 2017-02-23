@@ -112,7 +112,7 @@ class vacation extends rcube_plugin
 
         $rcmail->output->set_env('product_name', $rcmail->config->get('product_name'));
         // return the complete edit form as table
-        $out = '<fieldset><legend>' . $this->gettext('outofoffice') . ' ::: ' . $rcmail->user->data['username'] . '</legend>' . "\n";
+        $out = '<fieldset><legend>' . $this->gettext('vacation') . ' ::: ' . $rcmail->user->data['username'] . '</legend>' . "\n";
         // show autoresponder properties
 
         if ($this->v->useVacationAutoReply()) {
