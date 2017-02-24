@@ -61,7 +61,7 @@ class vacation extends rcube_plugin
     {
         $this->add_texts('localization/', array('vacation'));
         $rcmail = rcmail::get_instance();
-        $rcmail->output->set_pagetitle($this->gettext('autoresponder'));
+        $rcmail->output->set_pagetitle($this->gettext('vacation'));
         //Load template
         $rcmail->output->send('vacation.vacation');
     }
