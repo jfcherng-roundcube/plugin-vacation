@@ -1,7 +1,7 @@
 <?php
 $labels = array();
 $labels['aliases'] = '別名(aliases)';
-$labels['autoreply'] = "假期自動回信";
+$labels['autoreply'] = "啟用假期自動回信";
 $labels['autoreplybutton'] = '儲存';
 $labels['autoreplymessage'] = '假期自動回信的內容';
 $labels['autoreplysubject'] = '假期自動回信的主旨';
@@ -12,8 +12,7 @@ $labels['keepcopy'] = '在伺服器上保留郵件備份';
 $labels['mailforward'] = '郵件轉送';
 $labels['separate_alias'] = '以逗點分隔開每一個別名';
 $labels['success_changed'] = '設定更換成功！';
-$labels['vacation'] = '轉信';
-//$labels['vacation'] = '轉信與假期自動回信';
+$labels['vacation'] = '轉信與假期自動回信';
 
 // Button text
 $labels['aliasesbutton'] = '取得別名';
