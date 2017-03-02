@@ -37,6 +37,9 @@ class DotForward
     // Creates the content for the .forward file
     public function create()
     {
+        // configs
+        $emailDelimiter = ",";
+
         $arrDotForward = array();
 
         // If keep copy is not enabled, do not use \username.
@@ -73,7 +76,7 @@ class DotForward
 
         }
 
-        return implode("\n", $arrDotForward);
+        return implode($emailDelimiter, $arrDotForward);
 
     }
 
