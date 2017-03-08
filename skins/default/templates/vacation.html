@@ -1,42 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title><roundcube:object name="pagetitle" /></title>
-<roundcube:include file="/includes/links.html" />
-
+    <title><roundcube:object name="pagetitle" /></title>
+    <roundcube:include file="/includes/links.html" />
 </head>
 <body>
 
-<roundcube:include file="/includes/taskbar.html" />
-<roundcube:include file="/includes/header.html" />
+    <roundcube:include file="/includes/taskbar.html" />
+    <roundcube:include file="/includes/header.html" />
 
-<div id="mainscreen" class="offset">
-<roundcube:include file="/includes/settingstabs.html" />
+    <div id="mainscreen" class="offset">
+        <roundcube:include file="/includes/settingstabs.html" />
 
+        <div id="settings-right">
+            <div class="iframebox">
+                <div class="iframe floatingbuttons">
 
-<div id="settings-right">
-<div class="iframebox">
-<div class="iframe floatingbuttons">
+                    <div id="preferences-details" class="boxcontent uibox" style="left: 10px">
+                        <form name="vacationform" action="./?_task=settings&_action=plugin.vacation-save" method="post" class="propform">
+                            <div id="prefs-details">
+                                <roundcube:object name="plugin.vacation_form" />
 
-<div id="preferences-details" class="boxcontent uibox" style="left: 10px">
-    <form name="vacationform" action="./?_task=settings&_action=plugin.vacation-save" method="post"
-          class="propform">
-    <div id="prefs-details">
-        <roundcube:object name="plugin.vacation_form" />
-
-        <div class="footerleft formbuttons floating">
-	        <roundcube:button command="plugin.vacation-save" type="input"
-        	    class="button mainaction" label="save" title="save" /><br/>
-	        <p>&nbsp;</p>
+                                <div class="footerleft formbuttons floating">
+                                    <roundcube:button command="plugin.vacation-save" type="input" class="button mainaction" label="save" title="save" />
+                                    <br/>
+                                    <p>&nbsp;</p>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-    </form>
-</div>
-</div>
-</div>
-</div>
 
-</div>
+    </div>
 
 </body>
 </html>

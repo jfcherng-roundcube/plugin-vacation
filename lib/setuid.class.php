@@ -19,7 +19,7 @@ class setuid extends VacationDriver
     public function init()
     {
 
-        // The setuid executable needs to be executable
+        // the setuid executable needs to be executable
         $this->webserver_user = getenv('APACHE_RUN_USER');
         if (empty($this->webserver_user)) {
             $this->webserver_user = getenv("USER");
@@ -32,7 +32,7 @@ class setuid extends VacationDriver
             ), true, true);
 
         } else {
-            // Setuid ?
+            // setuid ?
             $fstat = stat($this->cfg['executable']);
 
             if (!$fstat['mode'] & 0004000) {
@@ -44,7 +44,7 @@ class setuid extends VacationDriver
         }
     }
 
-// Download .forward and .vacation.msg file
+    // download .forward and .vacation.msg file
     public function _get()
     {
         $vacArr = array("subject" => "", "body" => "", "forward" => "", "keepcopy" => true, "enabled" => false);
@@ -61,7 +61,7 @@ class setuid extends VacationDriver
             $vacArr = array_merge($vacArr, $d->parse($dotForwardFile));
         }
 
-        // Load aliases using the available identities
+        // load aliases using the available identities
         if (!$vacArr['enabled']) {
             $vacArr['aliases'] = $this->vacation_aliases("method");
         }
@@ -72,15 +72,15 @@ class setuid extends VacationDriver
     protected function setVacation()
     {
 
-        // Remove existing vacation files
+        // remove existing vacation files
         $this->disable();
 
         $d = new DotForward;
-        // Enable auto-reply?
+        // enable auto-reply?
         if ($this->enable) {
             $d->mergeOptions($this->dotforward);
 
-            // Create the .vacation.message file
+            // create the .vacation.message file
             $email = $this->identity['email'];
             $full_name = $this->identity['name'];
 
@@ -98,13 +98,13 @@ class setuid extends VacationDriver
             $this->uploadfile($message, $this->dotforward['message']);
 
         }
+
         $d->setOption("username", $this->user->data['username']);
         $d->setOption("keepcopy", $this->keepcopy);
         $d->setOption("forward", $this->forward);
-
         $d->setOption("aliases", $this->aliases);
 
-        // Do we even need to upload a .forward file?
+        // do we even need to upload a .forward file?
         if ($this->keepcopy || $this->enable || $this->forward != "") {
             if (!$this->enable) {
                 $d->setOption("binary", "");
@@ -116,15 +116,13 @@ class setuid extends VacationDriver
 
     private function disable()
     {
-        /*
-         * Syntax:    squirrelmail_vacation_proxy  server user password action source destination
-         */
+        // Syntax:  squirrelmail_vacation_proxy  server user password action source destination
         $deleteFiles = array($this->dotforward['message'], ".forward", $this->dotforward['database']);
         if (isset($this->dotforward['always_keep_message']) && $this->dotforward['always_keep_message']) {
             unset($deleteFiles[0]);
         }
 
-        // Deleting a file still requires a destination. Silly bug in the setuid binary?
+        // deleting a file still requires a destination. Silly bug in the setuid binary?
         $dummy = 'foobar';
 
         foreach ($deleteFiles as $file) {
@@ -138,7 +136,7 @@ class setuid extends VacationDriver
         return true;
     }
 
-    /*Removes the aliases
+    /* removes the aliases
      *
      * @param string data
      * @param string remoteFile
