@@ -16,6 +16,13 @@ class setuid extends VacationDriver
 
     private $webserver_user = null;
 
+    const VACATION_MSG_INDEX_MIME_VERSION = 0;
+    const VACATION_MSG_INDEX_CONTENT_TYPE = 1;
+    const VACATION_MSG_INDEX_CONTENT_TRANSFER = 2;
+    const VACATION_MSG_INDEX_FROM = 3;
+    const VACATION_MSG_INDEX_SUBJECT = 4;
+    const VACATION_MSG_INDEX_BODY = 5;
+
     public function init()
     {
 
@@ -51,8 +58,8 @@ class setuid extends VacationDriver
 
         if ($vacation_msg = $this->downloadfile($this->dotforward['message'])) {
             $dot_vacation_msg = explode("\n", $vacation_msg);
-            $vacArr['subject'] = str_replace('Subject: ', '', $dot_vacation_msg[1]);
-            $vacArr['body'] = implode("\n", array_slice($dot_vacation_msg, 2));
+            $vacArr['subject'] = trim(str_replace('Subject: ', '', $dot_vacation_msg[self::VACATION_MSG_INDEX_SUBJECT]));
+            $vacArr['body'] = trim(implode("\n", array_slice($dot_vacation_msg, self::VACATION_MSG_INDEX_BODY)));
         }
 
         if ($dotForwardFile = $this->downloadfile(".forward")) {
@@ -88,13 +95,18 @@ class setuid extends VacationDriver
                 $d->setOption("envelop_sender", $email);
             }
 
+            $vacation_header = <<<EOF
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit\n
+EOF;
             if (!empty($full_name)) {
-                $vacation_header = sprintf("From: %s <%s>\n", $full_name, $email);
+                $vacation_header .= sprintf("From: %s <%s>\n", $full_name, $email);
             } else {
-                $vacation_header = sprintf("From: %s\n", $email);
+                $vacation_header .= sprintf("From: %s\n", $email);
             }
             $vacation_header .= sprintf("Subject: %s\n\n", $this->subject);
-            $message = $vacation_header . $this->body;
+            $message = trim($vacation_header . $this->body);
             $this->uploadfile($message, $this->dotforward['message']);
 
         }
