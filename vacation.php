@@ -43,6 +43,7 @@ class vacation extends rcube_plugin
         $this->v = VacationDriverFactory::Create($this->inicfg['driver']);
 
         $this->v->setIniConfig($this->inicfg);
+        $this->add_hook('settings_actions', [$this, 'settingsActions']);
         $this->register_action('plugin.vacation', array($this, 'vacation_init'));
         $this->register_action('plugin.vacation-save', array($this, 'vacation_save'));
         $this->register_handler('plugin.vacation_form', array($this, 'vacation_form'));
@@ -55,6 +56,18 @@ class vacation extends rcube_plugin
         $this->identity = $this->user->get_identity();
         // forward settings are shared by ftp,sshftp and setuid driver
         $this->v->setDotForwardConfig($this->inicfg['driver'], $this->vcObject->getDotForwardCfg());
+    }
+
+    public function settingsActions(array $args)
+    {
+        $args['actions'][] = [
+            'action' => 'plugin.vacation',
+            'class' => 'vacation',
+            'label' => 'vacation',
+            'domain' => 'vacation',
+        ];
+
+        return $args;
     }
 
     public function vacation_init()
