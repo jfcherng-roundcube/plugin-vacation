@@ -3,48 +3,43 @@
 /*
  * DotForward helper class
  *
- * @package    plugin
- * @uses    rcube_plugin
- * @author    Jasper Slits <jaspersl at gmail dot com>
- * @version    1.9
+ * @package	plugin
+ * @uses	rcube_plugin
+ * @author	Jasper Slits <jaspersl at gmail dot com>
+ * @version	1.9
  * @license     GPL
- * @link    https://sourceforge.net/projects/rcubevacation/
- * @todo    See README.TXT
- */
-class DotForward
-{
+ * @link	https://sourceforge.net/projects/rcubevacation/
+ * @todo	See README.TXT
+*/
+class DotForward {
 
-    private $options = array("binary" => "",
-        "username" => "",
-        "flags" => "",
-        "aliases" => "",
-        "enabled" => false,
-        "forward" => null,
-        "envelop_sender" => null,
-        "keepcopy" => false);
+    private $options = array("binary"=>"",
+        "username"=>"",
+        "flags"=>"",
+        "aliases"=>"",
+        "enabled"=>false,
+        "forward"=>null,
+        "envelop_sender"=>null,
+        "keepcopy"=>false);
 
     // set options to be used with create()
-    public function setOption($key, $value)
-    {
+    public function setOption($key, $value) {
         $this->options[$key] = $value;
     }
-
-    public function mergeOptions(array $cfgArr)
-    {
+    
+    public function mergeOptions(array $cfgArr) {
         $this->options = array_merge($this->options, $cfgArr);
     }
 
     // Creates the content for the .forward file
-    public function create()
-    {
-        // configs
-        $emailDelimiter = ",";
+    public function create() {
+	    $arrDotForward = array();
 
-        $arrDotForward = array();
 
-        // If keep copy is not enabled, do not use \username.
-        if ($this->options['keepcopy']) {
-            $arrDotForward[] = $this->options['keepcopy'] = "\\" . $this->options['username'];
+        // If keep copy is not enabled, do not use \username. 
+        if ($this->options['keepcopy'])
+        {
+            $arrDotForward[] = $this->options['keepcopy'] = "\\".$this->options['username'];
         }
 
         if ($this->options['forward'] != null && $this->options['forward'] != "") {
@@ -69,35 +64,35 @@ class DotForward
         if ($this->options['envelop_sender'] != null) {
             $this->options['flags'] .= " -R " . $this->options['envelop_sender'];
         }
+		
+
+
 
         // If there is no binary set, we do not send an out office reply.
         if ($this->options['binary'] != "") {
-            $arrDotForward[] = sprintf('"|%s %s %s"', $this->options['binary'], $this->options['flags'], $this->options['username']);
+            $arrDotForward[] = sprintf('"|%s %s %s"',$this->options['binary'], $this->options['flags'], $this->options['username']);
 
-        }
+        } 
 
-        return implode($emailDelimiter, $arrDotForward);
-
+	    return join(",",$arrDotForward);
+        
     }
-
-    public function parse($dotForward)
-    {
-
-        $this->options['forward'] = '';
+    
+    public function parse($dotForward) {
 
         // Clean up the .forward file for easier parsing
         $dotForward = str_replace(array("|", "\"", "\\"), "", $dotForward);
 
-        // we convert all consecutive \r, \n, and commas into a single comma
-        $dotForward = preg_replace("/[\r\n,]+/", ",", $dotForward);
+		
 
         $arr = explode(",", trim($dotForward));
+
         $first_element = array_shift($arr);
 
-        // @TODO: test to see if $first_element equals vacation binary
+		// @TODO: test to see if $first_element equals vacation binary
 
         $this->options['keepcopy'] = ($first_element == $this->options['username']);
-        if (!$this->options['keepcopy']) {$this->options['forward'] = $first_element;}
+        if (!$this->options['keepcopy']) { $this->options['forward'] = $first_element; }
 
         // Check for aliases
         $aliasArr = array();
@@ -105,10 +100,10 @@ class DotForward
             $tmpArr = explode(" ", $tmp);
             array_shift($tmpArr);
             $aliasArr[] = array_shift($tmpArr);
-            $dotForward = implode(" ", $tmpArr);
+            $dotForward = join(" ", $tmpArr);
         }
         // Join the elements
-        $this->options["aliases"] = trim(implode(",", $aliasArr));
+        $this->options["aliases"] = trim(join(",", $aliasArr));
 
         // Location of the vacation binary may very, so we only look for the slash
         while ($next = array_shift($arr)) {
@@ -120,11 +115,12 @@ class DotForward
                 $this->options['enabled'] = !empty($this->options['binary']);
             } else {
 
-                $this->options['forward'] .= "\n{$next}";
+                $this->options['forward'] = $next;
             }
         }
-        $this->options['forward'] = trim($this->options['forward']);
 
         return $this->options;
     }
 }
+
+?>

@@ -102,7 +102,7 @@ class vacation extends rcube_plugin
         $config = $this->vcObject->getCurrentConfig();
 
         if (($errorStr = $this->vcObject->hasError()) !== false) {
-            raise_error(
+            rcube::raise_error(
                     array(
                     'code' => 601,
                     'type' => 'php',
@@ -151,7 +151,7 @@ class vacation extends rcube_plugin
             $out .= sprintf(
                 "<p><label for=\"%s\">%s</label>&nbsp;%s</p>",
                 $field_id,
-                rep_specialchars_output($this->gettext('autoreply_enable')),
+                rcube_utils::rep_specialchars_output($this->gettext('autoreply_enable')),
                 $input_autoresponderactive->show($settings['enabled'])
             );
 
@@ -165,7 +165,7 @@ class vacation extends rcube_plugin
             $out .= sprintf(
                 "<p><label for=\"%s\">%s</label><br/>%s</p>",
                 $field_id,
-                rep_specialchars_output($this->gettext('autoreply_subject')),
+                rcube_utils::rep_specialchars_output($this->gettext('autoreply_subject')),
                 $input_autorespondersubject->show($settings['subject'])
             );
 
@@ -180,7 +180,7 @@ class vacation extends rcube_plugin
             $out .= sprintf(
                 "<p><label for=\"%s\">%s</label><br/>%s</p>",
                 $field_id,
-                rep_specialchars_output($this->gettext('autoreply_message')),
+                rcube_utils::rep_specialchars_output($this->gettext('autoreply_message')),
                 $input_autoresponderbody->show($settings['body'])
             );
 
@@ -207,13 +207,13 @@ class vacation extends rcube_plugin
             // inputfield with button
             $out .= sprintf(
                 '<p><label for="%s">%s</label>&nbsp;%s',
-                $field_id, rep_specialchars_output($this->gettext('aliases')),
+                $field_id, rcube_utils::rep_specialchars_output($this->gettext('aliases')),
                 $input_autoresponderalias->show($settings['aliases'])
             );
             if ($hasMultipleIdentities != '') {
                 $out .= sprintf(
                     '<input type="button" id="aliaslink" class="button" value="%s"/>',
-                    rep_specialchars_output($this->gettext('aliasesbutton'))
+                    rcube_utils::rep_specialchars_output($this->gettext('aliasesbutton'))
                 );
             }
             $out .= "</p>";
@@ -230,7 +230,7 @@ class vacation extends rcube_plugin
         $out .= sprintf(
             "<p><label for=\"%s\">%s</label>&nbsp;%s</p>",
             $field_id,
-            rep_specialchars_output($this->gettext('keep_copy')),
+            rcube_utils::rep_specialchars_output($this->gettext('keep_copy')),
             $input_localcopy->show($settings['keepcopy'])
         );
 
@@ -248,7 +248,7 @@ class vacation extends rcube_plugin
             $out .= sprintf(
                 "<p><label for=\"%s\">%s</label><br/>%s</p>",
                 $field_id,
-                rep_specialchars_output($this->gettext('forward_addresses')),
+                rcube_utils::rep_specialchars_output($this->gettext('forward_addresses')),
                 $input_autoresponderforward->show($settings['forward'])
             );
 
