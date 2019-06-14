@@ -1,12 +1,9 @@
-(function(rcmail) {
-  if (!rcmail) {
-    return;
-  }
+/* Vacation Javascript */
 
+if (window.rcmail) {
   // Updates aliases
   rcmail.addEventListener('plugin.alias_callback', function(evt) {
     $('#vacation_aliases').val(evt.aliases);
-
   });
 
   rcmail.addEventListener('init', function(evt) {
@@ -22,10 +19,9 @@
     // Only enable the button if the element exists
     if ($('#aliaslink').length) {
       rcmail.register_button('get_vacation_aliases', 'aliaslink', 'input');
-
       $('#aliaslink').bind('click', function(e) {
         return rcmail.command('get_vacation_aliases', this);
       });
     }
   });
-})(window.rcmail);
+}
