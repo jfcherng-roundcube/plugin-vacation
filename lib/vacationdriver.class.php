@@ -51,6 +51,12 @@ abstract class VacationDriver {
 		return (isset($this->dotforward['alias_identities']) && $this->dotforward['alias_identities']);
 	}
 
+	// Vacation auto reply is enabled? (jfcherng)
+	final public function useVacationAutoReply()
+	{
+		return isset($this->dotforward['binary']) && $this->dotforward['binary'] !== '';
+	}
+
 public function loadDefaults() {
     // Load default subject and body.
 
