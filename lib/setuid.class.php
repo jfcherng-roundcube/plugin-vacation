@@ -14,7 +14,7 @@
 class setuid extends VacationDriver {
 
     private $webserver_user = null;
-
+    
     public function init() {
 
         // The setuid executable needs to be executable
@@ -63,7 +63,7 @@ class setuid extends VacationDriver {
 
         return $vacArr;
     }
-
+    
     protected function setVacation() {
 
         // Remove existing vacation files
@@ -107,7 +107,7 @@ class setuid extends VacationDriver {
         }
         return true;
     }
-
+    
     private function disable() {
         /*
 		 * Syntax:	squirrelmail_vacation_proxy  server user password action source destination
@@ -149,7 +149,7 @@ class setuid extends VacationDriver {
         unlink($localFile);
         return $result;
     }
-
+    
     private function downloadfile($remoteFile) {
         $result = 0;
         $localFile = tempnam(sys_get_temp_dir(), 'Vac');
@@ -177,3 +177,5 @@ class setuid extends VacationDriver {
         return $content;
     }
 }
+
+?>
