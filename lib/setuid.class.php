@@ -14,7 +14,7 @@
 class setuid extends VacationDriver {
 
     private $webserver_user = null;
-    
+
     public function init() {
 
         // The setuid executable needs to be executable
@@ -47,9 +47,29 @@ class setuid extends VacationDriver {
         $vacArr = array("subject"=>"", "body"=>"", "forward"=>"", "keepcopy"=>true, "enabled"=>false);
 
         if ($vacation_msg = $this->downloadfile($this->dotforward['message'])) {
-            $dot_vacation_msg = explode("\n", $vacation_msg);
-            $vacArr['subject'] = str_replace('Subject: ', '', $dot_vacation_msg[1]);
-            $vacArr['body'] = join("\n", array_slice($dot_vacation_msg, 2));
+            // Look for headers at the beginning of the file and strip them out.
+            // If we find the subject, store it to return to the calling function.
+            // The rest of the file is the message body, returned as a string
+            // of joined lines.
+            $subject = $message = '';
+
+            /** @var string[] */
+            $vacation_lines = preg_split('/\r?\n/u', $vacation_msg);
+
+            foreach ($vacation_lines as $line_num => $vacation_line) {
+                if (
+                    preg_match('/^(\S+):\s*(.*)/u', $vacation_line, $hdr) &&
+                    strcasecmp($hdr[1], 'Subject') === 0
+                ) {
+                    $subject = $hdr[2];
+                    $message = implode("\n", array_slice($vacation_lines, $line_num + 1));
+
+                    break;
+                }
+            }
+
+            $vacArr['subject'] = trim($subject);
+            $vacArr['body'] = trim($message);
         }
 
         if ($dotForwardFile = $this->downloadfile(".forward")) {
@@ -63,7 +83,7 @@ class setuid extends VacationDriver {
 
         return $vacArr;
     }
-    
+
     protected function setVacation() {
 
         // Remove existing vacation files
@@ -107,7 +127,7 @@ class setuid extends VacationDriver {
         }
         return true;
     }
-    
+
     private function disable() {
         /*
 		 * Syntax:	squirrelmail_vacation_proxy  server user password action source destination
@@ -149,7 +169,7 @@ class setuid extends VacationDriver {
         unlink($localFile);
         return $result;
     }
-    
+
     private function downloadfile($remoteFile) {
         $result = 0;
         $localFile = tempnam(sys_get_temp_dir(), 'Vac');
