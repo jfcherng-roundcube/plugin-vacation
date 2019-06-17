@@ -1,19 +1,18 @@
 <?php
-$labels = array();
-$labels['vacation'] = '轉信與假期自動回信';
-$labels['autoreply'] = "發出通知";
-$labels['outofoffice'] = '休假通知';
-$labels['autoreplysubject'] = '自動回信的主旨';
-$labels['autoreplymessage'] = '自動回信的內容';
-$labels['autoreplybutton'] = '儲存';
-$labels['mailforward'] = '郵件轉送';
-$labels['separate_alias'] = '以逗點分隔開每一個別名';
-$labels['separate_forward'] = '以逗點分隔開每一個轉送郵址';
-$labels['keepcopy'] = '保存一份郵件副本';
-$labels['forwardingaddresses'] = '轉送郵件到（一行一個郵件地址）';
+
+$labels = [];
+
+$labels['aliases'] = '別名(aliases)';
+$labels['autoreply_enable'] = "啟用假期自動回信";
+$labels['autoreply_message'] = '自動回信的內容';
+$labels['autoreply_subject'] = '自動回信的主旨';
 $labels['forward'] = '郵件轉送設定';
-$labels['success_changed'] = '休假設定更換成功';
-$labels['failed'] = '休假設定更換失敗!';
-$labels['aliases'] = '別名';
-// Button text
+$labels['forward_addresses'] = '轉送郵件到（一行一個郵件地址）';
+$labels['keep_copy'] = '在伺服器上保留郵件備份';
+$labels['save_settings_fail'] = '設定更換失敗！';
+$labels['save_settings_success'] = '設定更換成功！';
+$labels['separate_alias'] = '以逗點分隔開每一個別名';
+$labels['vacation'] = '轉信與假期自動回信';
+
+// button text
 $labels['aliasesbutton'] = '取得別名';
