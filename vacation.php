@@ -30,6 +30,8 @@ class vacation extends rcube_plugin
 
     public function init()
     {
+        $skin_path = $this->local_skin_path();
+
         $this->add_texts('localization/', array('vacation'));
         $this->load_config();
 
@@ -41,19 +43,22 @@ class vacation extends rcube_plugin
         }
 
         $this->v = VacationDriverFactory::Create($this->inicfg['driver']);
-
         $this->v->setIniConfig($this->inicfg);
+
         $this->add_hook('settings_actions', [$this, 'settingsActions']);
+        // the vacation_aliases method is defined in vacationdriver.class.php so use $this->v here
+        $this->register_action('plugin.vacation_aliases', array($this->v, 'vacation_aliases'));
         $this->register_action('plugin.vacation', array($this, 'vacation_init'));
         $this->register_action('plugin.vacation-save', array($this, 'vacation_save'));
         $this->register_handler('plugin.vacation_form', array($this, 'vacation_form'));
-        // the vacation_aliases method is defined in vacationdriver.class.php so use $this->v here
-        $this->register_action('plugin.vacation_aliases', array($this->v, 'vacation_aliases'));
+
         $this->include_script('vacation.js');
-        $this->include_stylesheet('skins/default/vacation.css');
+        $this->include_stylesheet("{$skin_path}/vacation.css");
+
         $this->rcmail = rcmail::get_instance();
         $this->user = $this->rcmail->user;
         $this->identity = $this->user->get_identity();
+
         // forward settings are shared by ftp,sshftp and setuid driver
         $this->v->setDotForwardConfig($this->inicfg['driver'], $this->vcObject->getDotForwardCfg());
     }
