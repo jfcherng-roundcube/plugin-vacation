@@ -59,7 +59,7 @@ abstract class VacationDriver
     // Vacation auto reply is enabled? (jfcherng)
     final public function useVacationAutoReply()
     {
-        return isset($this->dotforward['binary']) && $this->dotforward['binary'] !== '';
+        return true;
     }
 
     public function loadDefaults()
