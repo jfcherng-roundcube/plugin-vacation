@@ -1,6 +1,6 @@
 <?php
 
-$labels = [];
+$labels = array();
 
 $labels['aliases'] = '別名(aliases)';
 $labels['autoreply_enable'] = "啟用假期自動回信";
