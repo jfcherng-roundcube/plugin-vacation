@@ -42,11 +42,11 @@ class vacation extends rcube_plugin
         $this->v = VacationDriverFactory::Create($this->inicfg['driver']);
         $this->v->setIniConfig($this->inicfg);
 
-        $this->add_hook('settings_actions', [$this, 'settingsActions']);
+        $this->add_hook('settings_actions', array($this, 'settingsActions'));
         // the vacation_aliases method is defined in vacationdriver.class.php so use $this->v here
-        $this->register_action('plugin.vacation_aliases', [$this->v, 'vacation_aliases']);
-        $this->register_action('plugin.' . __CLASS__, [$this, 'vacation_init']);
-        $this->register_action('plugin.vacation-save', [$this, 'vacation_save']);
+        $this->register_action('plugin.vacation_aliases', array($this->v, 'vacation_aliases'));
+        $this->register_action('plugin.'.__CLASS__, array($this, 'vacation_init'));
+        $this->register_action('plugin.vacation-save', array($this, 'vacation_save'));
         $this->include_script('vacation.js');
 
         $this->rcmail = rcmail::get_instance();
@@ -59,19 +59,19 @@ class vacation extends rcube_plugin
 
     public function settingsActions(array $args)
     {
-        $args['actions'][] = [
-            'action' => 'plugin.' . __CLASS__,
+        $args['actions'][] = array(
+            'action' => 'plugin.'.__CLASS__,
             'class' => 'vacation',
             'label' => 'vacation',
             'domain' => 'vacation',
-        ];
+        );
 
         return $args;
     }
 
     public function vacation_init()
     {
-        $this->register_handler('plugin.body', [$this, 'vacation_form']);
+        $this->register_handler('plugin.body', array($this, 'vacation_form'));
 
         $this->rcmail->output->set_pagetitle($this->gettext('vacation'));
         $this->rcmail->output->send('plugin');
@@ -104,17 +104,17 @@ class vacation extends rcube_plugin
 
         $this->rcmail->output->set_env('product_name', $this->rcmail->config->get('product_name'));
         // return the complete edit form as table
-        $out = '<fieldset><legend>' . $this->gettext('vacation') . ' ::: ' . $this->rcmail->user->data['username'] . '</legend>';
+        $out = '<fieldset><legend>'.$this->gettext('vacation').' ::: '.$this->rcmail->user->data['username'].'</legend>';
         // show autoresponder properties
 
         if ($this->v->useVacationAutoReply()) {
             // auto-reply enabled
             $field_id = 'vacation_enabled';
-            $input_autoresponderactive = new html_checkbox([
+            $input_autoresponderactive = new html_checkbox(array(
                 'name' => '_vacation_enabled',
                 'id' => $field_id,
                 'value' => 1,
-            ]);
+            ));
             $out .= \sprintf(
                 '<p><label for="%s">%s</label>&nbsp;%s</p>',
                 $field_id,
@@ -124,11 +124,11 @@ class vacation extends rcube_plugin
 
             // subject
             $field_id = 'vacation_subject';
-            $input_autorespondersubject = new html_inputfield([
+            $input_autorespondersubject = new html_inputfield(array(
                 'name' => '_vacation_subject',
                 'id' => $field_id,
                 'size' => 90,
-            ]);
+            ));
             $out .= \sprintf(
                 '<p><label for="%s">%s</label><br/>%s</p>',
                 $field_id,
@@ -138,12 +138,12 @@ class vacation extends rcube_plugin
 
             // out of office body
             $field_id = 'vacation_body';
-            $input_autoresponderbody = new html_textarea([
+            $input_autoresponderbody = new html_textarea(array(
                 'name' => '_vacation_body',
                 'id' => $field_id,
                 'cols' => 60,
                 'rows' => 10,
-            ]);
+            ));
             $out .= \sprintf(
                 '<p><label for="%s">%s</label><br/>%s</p>',
                 $field_id,
@@ -163,12 +163,12 @@ class vacation extends rcube_plugin
             }
 
             $field_id = 'vacation_aliases';
-            $input_autoresponderalias = new html_inputfield([
+            $input_autoresponderalias = new html_inputfield(array(
                 'name' => '_vacation_aliases',
                 'id' => $field_id,
                 'size' => 75 + $size,
-            ]);
-            $out .= '<p>' . $this->gettext('separate_alias') . '</p>';
+            ));
+            $out .= '<p>'.$this->gettext('separate_alias').'</p>';
 
             // inputfield with button
             $out .= \sprintf(
@@ -185,15 +185,15 @@ class vacation extends rcube_plugin
             }
             $out .= '</p>';
         }
-        $out .= '</fieldset><fieldset><legend>' . $this->gettext('forward') . '</legend>';
+        $out .= '</fieldset><fieldset><legend>'.$this->gettext('forward').'</legend>';
 
         // keep a local copy of the mail
         $field_id = 'vacation_keepcopy';
-        $input_localcopy = new html_checkbox([
+        $input_localcopy = new html_checkbox(array(
             'name' => '_vacation_keepcopy',
             'id' => $field_id,
             'value' => 1,
-        ]);
+        ));
         $out .= \sprintf(
             '<p><label for="%s">%s</label>&nbsp;%s</p>',
             $field_id,
@@ -205,12 +205,12 @@ class vacation extends rcube_plugin
         if (!isset($this->inicfg['disable_forward']) || (isset($this->inicfg['disable_forward']) && $this->inicfg['disable_forward'] == false)) {
             // forward mail to another account
             $field_id = 'vacation_forward';
-            $input_autoresponderforward = new html_textarea([
+            $input_autoresponderforward = new html_textarea(array(
                 'name' => '_vacation_forward',
                 'id' => $field_id,
                 'cols' => 60,
                 'rows' => 8,
-            ]);
+            ));
             $out .= \sprintf(
                 '<p><label for="%s">%s</label><br/>%s</p>',
                 $field_id,
@@ -223,27 +223,27 @@ class vacation extends rcube_plugin
         // the submit button
         $out .= html::p(
             null,
-            $this->rcmail->output->button([
+            $this->rcmail->output->button(array(
                 'command' => 'plugin.vacation-save',
                 'type' => 'input',
                 'class' => 'button mainaction',
                 'label' => 'save',
-            ])
+            ))
         );
 
         $this->rcmail->output->add_gui_object('vacationform', 'vacationform');
-        $out = $this->rcmail->output->form_tag([
+        $out = $this->rcmail->output->form_tag(array(
             'id' => 'vacationform',
             'name' => 'vacationform',
             'method' => 'post',
             'class' => 'propform',
             'action' => './?_task=settings&_action=plugin.vacation-save',
-        ], $out);
+        ), $out);
 
-        return html::div([
+        return html::div(array(
             'class' => 'boxcontent formcontent',
             'style' => 'overflow: auto;',
-        ], $out);
+        ), $out);
     }
 
     // parse config.ini and get configuration for current host
@@ -255,7 +255,7 @@ class vacation extends rcube_plugin
 
         if (($errorStr = $this->vcObject->hasError()) !== false) {
             rcube::raise_error(
-                [
+                array(
                     'code' => 601,
                     'type' => 'php',
                     'file' => __FILE__,
@@ -263,7 +263,7 @@ class vacation extends rcube_plugin
                         'Vacation plugin: %s',
                         $errorStr
                     ),
-                ],
+                ),
                 true,
                 true
             );
