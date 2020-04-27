@@ -1,3 +1,11 @@
+May Also See This Fork
+======================
+
+https://github.com/bukowski12/roundcube-vacation-plugin
+
+It claims supporting Roundcube `1.4` and `Elastic` skin.
+
+
 roundcube-vacation-2.x
 ======================
 
